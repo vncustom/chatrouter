@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenRouter Chat Bot</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OpenRouter Chat Bot</h1>
+        </header>
+        
+        <div class="control-panel">
+            <div class="model-selection">
+                <label for="model">Model:</label>
+                <select id="model">
+                    {% for model in models %}
+                    <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="api-key">
+                <label for="api-key">API Key:</label>
+                <input type="password" id="api-key" placeholder="Nhập API Key của bạn">
+                <button id="save-api-key">Lưu</button>
+                <span id="api-status" class="status-error">❌ Chưa có</span>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div id="chat-history"></div>
+        </div>
+        
+        <div id="attachment-area"></div>
+        
+        <div class="input-area">
+            <form id="chat-form" enctype="multipart/form-data">
+                <button type="button" id="attach-btn">📎</button>
+                <input type="file" id="file-input" multiple style="display:none">
+                <input type="text" id="message-input" placeholder="Nhập tin nhắn của bạn...">
+                <button type="submit" id="send-btn">Gửi</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
