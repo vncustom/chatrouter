@@ -28,6 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
     attachBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', handleFileSelect);
     
+    // Kiểm tra kết nối API
+    checkApiStatus();
+    
+    // Xác thực API key nếu đã lưu
+    if (apiKey) {
+        validateApiKey();
+    }
+    
     // Functions
     function saveApiKey() {
         const key = apiKeyInput.value.trim();
@@ -37,8 +45,74 @@ document.addEventListener('DOMContentLoaded', function() {
             apiKeyInput.value = '********';
             apiStatus.textContent = '✅ Đã lưu';
             apiStatus.className = 'status-success';
+            
+            // Hiển thị thông báo về API key đã lưu
+            addMessage('system', 'API Key đã được lưu thành công');
+            
+            // Xác thực API key
+            validateApiKey();
         } else {
             alert('Vui lòng nhập API Key');
+        }
+    }
+    
+    function validateApiKey() {
+        if (apiKey) {
+            addMessage('system', 'Đang xác thực API key...');
+            
+            fetch('https://openrouter.ai/api/v1/auth/key', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'HTTP-Referer': window.location.origin
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(`API key verification failed: ${response.status}`);
+            })
+            .then(data => {
+                // Xóa thông báo "Đang xác thực API key..."
+                const loadingMessage = document.querySelector('.system-message:last-child');
+                if (loadingMessage && loadingMessage.querySelector('.message-content').textContent === 'Đang xác thực API key...') {
+                    loadingMessage.remove();
+                }
+                
+                addMessage('system', 'API key hợp lệ ✅');
+            })
+            .catch(error => {
+                // Xóa thông báo "Đang xác thực API key..."
+                const loadingMessage = document.querySelector('.system-message:last-child');
+                if (loadingMessage && loadingMessage.querySelector('.message-content').textContent === 'Đang xác thực API key...') {
+                    loadingMessage.remove();
+                }
+                
+                addMessage('system', `Lỗi xác thực API key: ${error.message}. Vui lòng kiểm tra lại.`);
+                apiStatus.textContent = '❌ Không hợp lệ';
+                apiStatus.className = 'status-error';
+                apiKey = '';
+                localStorage.removeItem('openrouter_api_key');
+            });
+        }
+    }
+    
+    async function checkApiStatus() {
+        try {
+            const response = await fetch('/api/status');
+            const data = await response.json();
+            
+            if (data.status === "ok") {
+                console.log("API connection successful: ", data);
+                addMessage('system', `Kết nối tới server thành công. Thời gian server: ${data.timestamp}`);
+            } else {
+                console.error("API returned unexpected status", data);
+                addMessage('system', 'API trả về trạng thái không mong đợi');
+            }
+        } catch (error) {
+            console.error("Error checking API status:", error);
+            addMessage('system', `Không thể kết nối đến API: ${error.message}`);
         }
     }
     
@@ -103,13 +177,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
         }
         
+        let timestampText = timestamp ? timestamp : new Date().toLocaleTimeString();
+        
         let filesHtml = '';
         if (files && files.length > 0) {
             filesHtml = `<div class="files-info">Files: ${files.join(', ')}</div>`;
         }
         
         messageDiv.innerHTML = `
-            <div class="message-header">${headerText} ${timestamp}</div>
+            <div class="message-header">${headerText} ${timestampText}</div>
             ${filesHtml}
             <div class="message-content">${content}</div>
         `;
@@ -138,6 +214,13 @@ document.addEventListener('DOMContentLoaded', function() {
         messageInput.disabled = true;
         document.getElementById('send-btn').disabled = true;
         
+        // Show loading indicator
+        const loadingId = 'loading-' + Date.now();
+        addMessage('system', 'Đang xử lý...');
+        const loadingMessage = chatHistory.lastElementChild;
+        loadingMessage.id = loadingId;
+        loadingMessage.querySelector('.message-content').classList.add('loading-dots');
+        
         // Add user message to chat
         const timestamp = new Date().toLocaleTimeString();
         addMessage('user', message, timestamp);
@@ -163,10 +246,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
+            // Thêm timeout dài hơn (60 giây)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+            
             const response = await fetch('/api/chat', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                signal: controller.signal
             });
+            
+            clearTimeout(timeoutId);
+            
+            // Xóa thông báo loading
+            const loadingElement = document.getElementById(loadingId);
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error ${response.status}`);
+            }
             
             const data = await response.json();
             
@@ -176,7 +277,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 addMessage('assistant', data.response, data.timestamp, data.files);
             }
         } catch (error) {
-            addMessage('system', `Lỗi kết nối: ${error.message}`);
+            // Xóa thông báo loading
+            const loadingElement = document.getElementById(loadingId);
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+            
+            if (error.name === 'AbortError') {
+                addMessage('system', 'Yêu cầu bị hủy do mất quá nhiều thời gian');
+            } else {
+                addMessage('system', `Lỗi kết nối: ${error.message}`);
+            }
         } finally {
             // Re-enable input
             messageInput.disabled = false;

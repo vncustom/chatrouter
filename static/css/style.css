@@ -60,6 +60,11 @@ button:hover {
     background: #3a57c8;
 }
 
+button:disabled {
+    background: #a0a0a0;
+    cursor: not-allowed;
+}
+
 .chat-container {
     flex: 1;
     overflow-y: auto;
@@ -110,6 +115,13 @@ button:hover {
     white-space: pre-wrap;
 }
 
+.files-info {
+    font-size: 0.8rem;
+    color: #777;
+    margin-bottom: 0.3rem;
+    font-style: italic;
+}
+
 .attachment-list {
     background: #f9f9f9;
     border-radius: 8px;
@@ -154,6 +166,19 @@ button:hover {
 
 .status-error {
     color: red;
+}
+
+/* Hiệu ứng loading */
+.loading-dots:after {
+    content: '.';
+    animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60% { content: '...'; }
+    80%, 100% { content: ''; }
 }
 
 /* Responsive */
