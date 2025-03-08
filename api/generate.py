@@ -1,23 +1,9 @@
-from flask import Flask, request, jsonify, send_from_directory
-import requests
-import os
-import json
 from http.server import BaseHTTPRequestHandler
-
-app = Flask(__name__)
+import json
+import os
+import requests
 
 class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        
-        with open('index.html', 'r') as f:
-            content = f.read()
-            
-        self.wfile.write(content.encode('utf-8'))
-        return
-        
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
