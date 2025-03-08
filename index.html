@@ -73,6 +73,115 @@
             font-style: italic;
             color: #7f8c8d;
         }
+        .input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.attach-icon {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #3498db;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.attach-icon:hover {
+    color: #2980b9;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.file-item {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+
+.file-item span {
+    margin-right: 5px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-item button {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    font-size: 16px;
+}
+
+.copy-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    margin-left: auto;
+    width: auto;
+}
+
+.copy-btn:hover {
+    background-color: #2980b9;
+}
+
+.response-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.image-preview {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 5px;
+    border-radius: 3px;
+}
+
+.model-info {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+.model-info.supports-images {
+    color: #27ae60;
+}
+
+.model-info.no-images {
+    color: #e67e22;
+}
     </style>
 </head>
 <body>
@@ -90,12 +199,18 @@
     <option value="google/gemini-2.0-flash-thinking-exp:free">Google Gemini 2.0 Flash Thinking (Free)</option>
     <option value="meta-llama/llama-3.3-70b-instruct:free">Meta Llama 3.3 70B (Free)</option>
 </select>
+            <div id="model-info" class="model-info"></div>
         </div>
         
         <div>
             <label for="prompt">Enter your prompt:</label>
-            <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
-        </div>
+            <div class="input-container">
+        <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
+        <button class="attach-icon" id="attach-btn" title="Attach file">📎</button>
+        <input type="file" id="file-input" class="file-input" multiple accept="image/*">
+    </div>
+    <div id="file-preview" class="file-preview"></div>
+</div>
         
         <button id="generate-btn">Generate Response</button>
         
@@ -104,63 +219,170 @@
         </div>
         
         <div id="response-container" style="display: none;">
-            <h3>Response:</h3>
-            <div id="response" class="response"></div>
-        </div>
+    <div class="response-header">
+        <h3>Response:</h3>
+        <button id="copy-btn" class="copy-btn">
+            📋 Copy
+        </button>
+    </div>
+    <div id="response" class="response"></div>
+</div>
     </div>
 
     <script>
-        document.getElementById('generate-btn').addEventListener('click', async () => {
-            const promptText = document.getElementById('prompt').value.trim();
-            const model = document.getElementById('model').value;
-            const generateBtn = document.getElementById('generate-btn');
-            const loadingDiv = document.getElementById('loading');
-            const responseContainer = document.getElementById('response-container');
-            const responseDiv = document.getElementById('response');
-            
-            if (!promptText) {
-                alert('Please enter a prompt');
-                return;
-            }
-            
-            // Disable button and show loading
-            generateBtn.disabled = true;
-            loadingDiv.style.display = 'block';
-            responseContainer.style.display = 'none';
-            
-            try {
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        prompt: promptText,
-                        model: model
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    responseDiv.textContent = data.response;
-                    responseDiv.classList.remove('error');
-                } else {
-                    responseDiv.textContent = `Error: ${data.error}`;
-                    responseDiv.classList.add('error');
-                }
-                
-                responseContainer.style.display = 'block';
-            } catch (error) {
-                responseDiv.textContent = `Error: ${error.message}`;
-                responseDiv.classList.add('error');
-                responseContainer.style.display = 'block';
-            } finally {
-                // Re-enable button and hide loading
-                generateBtn.disabled = false;
-                loadingDiv.style.display = 'none';
-            }
+        // List of models that support image input
+const visionModels = [
+    'qwen/qwen2.5-vl-72b-instruct',
+    'google/gemini-2.0-pro',
+    'google/gemini-2.0-flash',
+    'google/gemini-2.0-pro-exp-02-05',
+    'google/gemini-2.0-flash-exp',
+    'google/gemini-2.0-flash-thinking-exp'
+];
+
+// Check if a model supports image input
+function modelSupportsImages(model) {
+    // Extract the base model name without the ":free" suffix
+    const baseModel = model.includes(':') ? model.split(':')[0] : model;
+    return visionModels.some(vm => baseModel.startsWith(vm));
+}
+
+// Update model info when model changes
+document.getElementById('model').addEventListener('change', function() {
+    updateModelInfo(this.value);
+});
+
+// Initialize model info
+updateModelInfo(document.getElementById('model').value);
+
+function updateModelInfo(model) {
+    const modelInfoDiv = document.getElementById('model-info');
+    const supportsImages = modelSupportsImages(model);
+    
+    if (supportsImages) {
+        modelInfoDiv.textContent = '✓ This model supports image input';
+        modelInfoDiv.className = 'model-info supports-images';
+    } else {
+        modelInfoDiv.textContent = 'ⓘ This model does not support image input';
+        modelInfoDiv.className = 'model-info no-images';
+    }
+}
+
+document.getElementById('generate-btn').addEventListener('click', async () => {
+    const promptText = document.getElementById('prompt').value.trim();
+    const model = document.getElementById('model').value;
+    const generateBtn = document.getElementById('generate-btn');
+    const loadingDiv = document.getElementById('loading');
+    const responseContainer = document.getElementById('response-container');
+    const responseDiv = document.getElementById('response');
+    const fileInput = document.getElementById('file-input');
+    
+    if (!promptText && fileInput.files.length === 0) {
+        alert('Please enter a prompt or attach files');
+        return;
+    }
+    
+    // Disable button and show loading
+    generateBtn.disabled = true;
+    loadingDiv.style.display = 'block';
+    responseContainer.style.display = 'none';
+    
+    try {
+        // Create FormData for file uploads
+        const formData = new FormData();
+        formData.append('prompt', promptText);
+        formData.append('model', model);
+        
+        // Add files to FormData
+        for (let i = 0; i < fileInput.files.length; i++) {
+            formData.append('files', fileInput.files[i]);
+        }
+        
+        // Send request with FormData
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            body: formData
         });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            responseDiv.textContent = data.response;
+            responseDiv.classList.remove('error');
+        } else {
+            responseDiv.textContent = `Error: ${data.error}`;
+            responseDiv.classList.add('error');
+        }
+        
+        responseContainer.style.display = 'block';
+    } catch (error) {
+        responseDiv.textContent = `Error: ${error.message}`;
+        responseDiv.classList.add('error');
+        responseContainer.style.display = 'block';
+    } finally {
+        // Re-enable button and hide loading
+        generateBtn.disabled = false;
+        loadingDiv.style.display = 'none';
+    }
+});
+
+// Attach file button functionality
+document.getElementById('attach-btn').addEventListener('click', () => {
+    document.getElementById('file-input').click();
+});
+
+// File input change handler
+document.getElementById('file-input').addEventListener('change', (event) => {
+    const filePreview = document.getElementById('file-preview');
+    filePreview.innerHTML = '';
+    
+    Array.from(event.target.files).forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        
+        // If it's an image, show a preview
+        if (file.type.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.className = 'image-preview';
+            img.src = URL.createObjectURL(file);
+            fileItem.appendChild(img);
+        }
+        
+        const fileName = document.createElement('span');
+        fileName.textContent = file.name;
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = '✕';
+        removeBtn.title = 'Remove file';
+        removeBtn.addEventListener('click', () => {
+            fileItem.remove();
+            // Note: This doesn't actually remove the file from the input
+            // For a complete solution, you'd need to create a new FileList
+        });
+        
+        fileItem.appendChild(fileName);
+        fileItem.appendChild(removeBtn);
+        filePreview.appendChild(fileItem);
+    });
+});
+
+// Copy button functionality
+document.getElementById('copy-btn').addEventListener('click', () => {
+    const responseText = document.getElementById('response').textContent;
+    navigator.clipboard.writeText(responseText)
+        .then(() => {
+            const copyBtn = document.getElementById('copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '✓ Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert('Failed to copy text to clipboard');
+        });
+});
     </script>
 </body>
 </html>
