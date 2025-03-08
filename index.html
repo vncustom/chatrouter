@@ -28,7 +28,7 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        select, textarea, button {
+        select, textarea, button, input[type="text"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -74,114 +74,240 @@
             color: #7f8c8d;
         }
         .input-container {
-    position: relative;
-    margin-bottom: 20px;
-}
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .action-icons {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            display: flex;
+            gap: 10px;
+        }
 
-.attach-icon {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    color: #3498db;
-    background: none;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .icon-btn {
+            cursor: pointer;
+            font-size: 20px;
+            color: #3498db;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            width: auto;
+        }
 
-.attach-icon:hover {
-    color: #2980b9;
-}
+        .icon-btn:hover {
+            color: #2980b9;
+        }
 
-.file-input {
-    display: none;
-}
+        .file-input {
+            display: none;
+        }
 
-.file-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
+        .file-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-.file-item {
-    position: relative;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    background-color: #f5f5f5;
-}
+        .file-item {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
 
-.file-item span {
-    margin-right: 5px;
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+        .file-item span {
+            margin-right: 5px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-.file-item button {
-    background: none;
-    border: none;
-    color: #e74c3c;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    width: auto;
-    font-size: 16px;
-}
+        .file-item button {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            width: auto;
+            font-size: 16px;
+        }
 
-.copy-btn {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    margin-left: auto;
-    width: auto;
-}
+        .copy-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            margin-left: auto;
+            width: auto;
+        }
 
-.copy-btn:hover {
-    background-color: #2980b9;
-}
+        .copy-btn:hover {
+            background-color: #2980b9;
+        }
 
-.response-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
+        .response-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
 
-.image-preview {
-    max-width: 100px;
-    max-height: 100px;
-    margin-right: 5px;
-    border-radius: 3px;
-}
+        .image-preview {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
 
-.model-info {
-    font-size: 12px;
-    color: #7f8c8d;
-    margin-top: 5px;
-}
+        .model-info {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
 
-.model-info.supports-images {
-    color: #27ae60;
-}
+        .model-info.supports-images {
+            color: #27ae60;
+        }
 
-.model-info.no-images {
-    color: #e67e22;
-}
+        .model-info.no-images {
+            color: #e67e22;
+        }
+
+        /* Search modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+
+        .search-btn {
+            width: auto;
+            margin-bottom: 0;
+        }
+
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .search-result {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        .search-result:last-child {
+            border-bottom: none;
+        }
+
+        .search-result h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .search-result a {
+            color: #3498db;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .search-result p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .use-result-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 5px;
+            width: auto;
+            display: inline-block;
+        }
+
+        .use-result-btn:hover {
+            background-color: #219653;
+        }
+
+        .search-loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+
+        .search-error {
+            color: #e74c3c;
+            padding: 10px;
+            background-color: #fadbd8;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -205,12 +331,15 @@
         <div>
             <label for="prompt">Enter your prompt:</label>
             <div class="input-container">
-        <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
-        <button class="attach-icon" id="attach-btn" title="Attach file">📎</button>
-        <input type="file" id="file-input" class="file-input" multiple accept="image/*">
-    </div>
-    <div id="file-preview" class="file-preview"></div>
-</div>
+                <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
+                <div class="action-icons">
+                    <button class="icon-btn" id="search-btn" title="Search Internet">🔍</button>
+                    <button class="icon-btn" id="attach-btn" title="Attach file">📎</button>
+                </div>
+                <input type="file" id="file-input" class="file-input" multiple accept="image/*">
+            </div>
+            <div id="file-preview" class="file-preview"></div>
+        </div>
         
         <button id="generate-btn">Generate Response</button>
         
@@ -227,6 +356,23 @@
     </div>
     <div id="response" class="response"></div>
 </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-search">&times;</span>
+            <h2>Search the Internet</h2>
+            <div class="search-container">
+                <input type="text" id="search-input" class="search-input" placeholder="Enter your search query...">
+                <button id="do-search-btn" class="search-btn">Search</button>
+            </div>
+            <div id="search-loading" class="search-loading" style="display: none;">
+                Searching the internet, please wait...
+            </div>
+            <div id="search-error" class="search-error" style="display: none;"></div>
+            <div id="search-results" class="search-results"></div>
+        </div>
     </div>
 
     <script>
@@ -383,6 +529,176 @@ document.getElementById('copy-btn').addEventListener('click', () => {
             alert('Failed to copy text to clipboard');
         });
 });
+
+        // Search functionality
+        const searchModal = document.getElementById('search-modal');
+        const searchBtn = document.getElementById('search-btn');
+        const closeSearchBtn = document.getElementById('close-search');
+        const searchInput = document.getElementById('search-input');
+        const doSearchBtn = document.getElementById('do-search-btn');
+        const searchResults = document.getElementById('search-results');
+        const searchLoading = document.getElementById('search-loading');
+        const searchError = document.getElementById('search-error');
+        const promptTextarea = document.getElementById('prompt');
+
+        // Open search modal
+        searchBtn.addEventListener('click', () => {
+            searchModal.style.display = 'block';
+            searchInput.focus();
+            // Pre-fill search input with prompt text if any
+            const promptText = promptTextarea.value.trim();
+            if (promptText) {
+                searchInput.value = promptText;
+            }
+        });
+
+        // Close search modal
+        closeSearchBtn.addEventListener('click', () => {
+            searchModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === searchModal) {
+                searchModal.style.display = 'none';
+            }
+        });
+
+        // Search on Enter key
+        searchInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                doSearchBtn.click();
+            }
+        });
+
+        // Perform search
+        doSearchBtn.addEventListener('click', async () => {
+            const query = searchInput.value.trim();
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+
+            // Show loading, hide results and error
+            searchLoading.style.display = 'block';
+            searchResults.innerHTML = '';
+            searchError.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displaySearchResults(data);
+                } else {
+                    searchError.textContent = data.error || 'Search failed';
+                    searchError.style.display = 'block';
+                }
+            } catch (error) {
+                searchError.textContent = `Error: ${error.message}`;
+                searchError.style.display = 'block';
+            } finally {
+                searchLoading.style.display = 'none';
+            }
+        });
+
+        // Display search results
+        function displaySearchResults(data) {
+            searchResults.innerHTML = '';
+
+            if (data.message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'search-error';
+                messageDiv.textContent = data.message;
+                searchResults.appendChild(messageDiv);
+            }
+
+            if (!data.results || data.results.length === 0) {
+                const noResults = document.createElement('p');
+                noResults.textContent = 'No results found. Try a different search query.';
+                searchResults.appendChild(noResults);
+                return;
+            }
+
+            // Add "Use All Results" button at the top
+            const useAllDiv = document.createElement('div');
+            useAllDiv.style.marginBottom = '15px';
+            const useAllBtn = document.createElement('button');
+            useAllBtn.className = 'use-result-btn';
+            useAllBtn.textContent = 'Use All Results in Prompt';
+            useAllBtn.addEventListener('click', () => {
+                let searchInfo = `Search results for "${data.query}":\n\n`;
+                
+                data.results.forEach((result, index) => {
+                    searchInfo += `${index + 1}. ${result.title}\n`;
+                    searchInfo += `   URL: ${result.link}\n`;
+                    searchInfo += `   ${result.snippet}\n\n`;
+                });
+                
+                // Append to existing prompt or set as new prompt
+                const currentPrompt = promptTextarea.value;
+                if (currentPrompt) {
+                    promptTextarea.value = currentPrompt + '\n\n' + searchInfo;
+                } else {
+                    promptTextarea.value = searchInfo;
+                }
+                
+                // Close the modal
+                searchModal.style.display = 'none';
+            });
+            useAllDiv.appendChild(useAllBtn);
+            searchResults.appendChild(useAllDiv);
+
+            // Add individual results
+            data.results.forEach((result, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'search-result';
+
+                const title = document.createElement('h3');
+                title.textContent = result.title || `Result ${index + 1}`;
+
+                const link = document.createElement('a');
+                link.href = result.link;
+                link.textContent = result.link;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+
+                const snippet = document.createElement('p');
+                snippet.textContent = result.snippet || 'No description available';
+
+                const useBtn = document.createElement('button');
+                useBtn.className = 'use-result-btn';
+                useBtn.textContent = 'Use in Prompt';
+                useBtn.addEventListener('click', () => {
+                    const resultText = `From search result: "${result.title}"\nURL: ${result.link}\n${result.snippet}`;
+                    
+                    // Append to existing prompt or set as new prompt
+                    const currentPrompt = promptTextarea.value;
+                    if (currentPrompt) {
+                        promptTextarea.value = currentPrompt + '\n\n' + resultText;
+                    } else {
+                        promptTextarea.value = resultText;
+                    }
+                    
+                    // Close the modal
+                    searchModal.style.display = 'none';
+                });
+
+                resultDiv.appendChild(title);
+                resultDiv.appendChild(link);
+                resultDiv.appendChild(snippet);
+                resultDiv.appendChild(useBtn);
+
+                searchResults.appendChild(resultDiv);
+            });
+        }
     </script>
 </body>
 </html>
