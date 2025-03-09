@@ -28,7 +28,7 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        select, textarea, button {
+        select, textarea, button, input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -67,6 +67,10 @@
             color: #e74c3c;
             font-weight: bold;
         }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
         .loading {
             text-align: center;
             margin: 20px 0;
@@ -74,119 +78,199 @@
             color: #7f8c8d;
         }
         .input-container {
-    position: relative;
-    margin-bottom: 20px;
-}
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .action-icons {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            display: flex;
+            gap: 10px;
+        }
 
-.attach-icon {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    color: #3498db;
-    background: none;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .icon-btn {
+            cursor: pointer;
+            font-size: 20px;
+            color: #3498db;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            width: auto;
+        }
 
-.attach-icon:hover {
-    color: #2980b9;
-}
+        .icon-btn:hover {
+            color: #2980b9;
+        }
 
-.file-input {
-    display: none;
-}
+        .file-input {
+            display: none;
+        }
 
-.file-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
+        .file-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-.file-item {
-    position: relative;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    background-color: #f5f5f5;
-}
+        .file-item {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
 
-.file-item span {
-    margin-right: 5px;
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+        .file-item span {
+            margin-right: 5px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-.file-item button {
-    background: none;
-    border: none;
-    color: #e74c3c;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    width: auto;
-    font-size: 16px;
-}
+        .file-item button {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            width: auto;
+            font-size: 16px;
+        }
 
-.copy-btn {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    margin-left: auto;
-    width: auto;
-}
+        .copy-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            margin-left: auto;
+            width: auto;
+        }
 
-.copy-btn:hover {
-    background-color: #2980b9;
-}
+        .copy-btn:hover {
+            background-color: #2980b9;
+        }
 
-.response-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
+        .response-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
 
-.image-preview {
-    max-width: 100px;
-    max-height: 100px;
-    margin-right: 5px;
-    border-radius: 3px;
-}
+        .image-preview {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
 
-.model-info {
-    font-size: 12px;
-    color: #7f8c8d;
-    margin-top: 5px;
-}
+        .model-info {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
 
-.model-info.supports-images {
-    color: #27ae60;
-}
+        .model-info.supports-images {
+            color: #27ae60;
+        }
 
-.model-info.no-images {
-    color: #e67e22;
-}
+        .model-info.no-images {
+            color: #e67e22;
+        }
+
+        .api-key-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .api-key-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .api-key-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .api-key-input input {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+
+        .api-key-input button {
+            width: auto;
+            margin-bottom: 0;
+        }
+
+        .api-key-status {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #7f8c8d;
+            width: auto;
+            padding: 0;
+            margin: 0;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>OpenRouter AI Interface</h1>
+        
+        <div class="api-key-section">
+            <h3>API Key</h3>
+            <p class="info-text">Nhập OpenRouter API key của bạn để sử dụng ứng dụng. API key sẽ được lưu trữ cục bộ trong trình duyệt của bạn và không được gửi đến máy chủ của chúng tôi.</p>
+            <div class="password-container">
+                <input type="password" id="api-key-input" placeholder="Nhập OpenRouter API key của bạn...">
+                <button class="toggle-password" id="toggle-password">👁️</button>
+            </div>
+            <div class="api-key-input">
+                <button id="save-api-key">Lưu API Key</button>
+                <button id="clear-api-key" style="background-color: #e74c3c;">Xóa API Key</button>
+            </div>
+            <div id="api-key-status" class="api-key-status"></div>
+        </div>
         
         <div>
             <label for="model">Select Model:</label>
@@ -205,12 +289,14 @@
         <div>
             <label for="prompt">Enter your prompt:</label>
             <div class="input-container">
-        <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
-        <button class="attach-icon" id="attach-btn" title="Attach file">📎</button>
-        <input type="file" id="file-input" class="file-input" multiple accept="image/*">
-    </div>
-    <div id="file-preview" class="file-preview"></div>
-</div>
+                <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
+                <div class="action-icons">
+                    <button class="icon-btn" id="attach-btn" title="Attach file">📎</button>
+                </div>
+                <input type="file" id="file-input" class="file-input" multiple accept="image/*">
+            </div>
+            <div id="file-preview" class="file-preview"></div>
+        </div>
         
         <button id="generate-btn">Generate Response</button>
         
@@ -230,6 +316,77 @@
     </div>
 
     <script>
+        // API Key Management
+        const apiKeyInput = document.getElementById('api-key-input');
+        const saveApiKeyBtn = document.getElementById('save-api-key');
+        const clearApiKeyBtn = document.getElementById('clear-api-key');
+        const apiKeyStatus = document.getElementById('api-key-status');
+        const togglePasswordBtn = document.getElementById('toggle-password');
+
+        // Check if API key exists in localStorage
+        function checkApiKey() {
+            const apiKey = localStorage.getItem('openrouter_api_key');
+            if (apiKey) {
+                apiKeyStatus.textContent = 'API Key đã được lưu';
+                apiKeyStatus.className = 'api-key-status success';
+                // Mask the API key in the input field
+                apiKeyInput.value = '•'.repeat(20);
+            } else {
+                apiKeyStatus.textContent = 'Chưa có API Key nào được lưu';
+                apiKeyStatus.className = 'api-key-status error';
+                apiKeyInput.value = '';
+            }
+        }
+
+        // Initialize API key check
+        checkApiKey();
+
+        // Save API key to localStorage
+        saveApiKeyBtn.addEventListener('click', () => {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                apiKeyStatus.textContent = 'Vui lòng nhập API Key';
+                apiKeyStatus.className = 'api-key-status error';
+                return;
+            }
+
+            // Don't save if it's the masked value
+            if (apiKey === '•'.repeat(20)) {
+                return;
+            }
+
+            localStorage.setItem('openrouter_api_key', apiKey);
+            apiKeyStatus.textContent = 'API Key đã được lưu thành công';
+            apiKeyStatus.className = 'api-key-status success';
+            
+            // Mask the API key
+            apiKeyInput.value = '•'.repeat(20);
+        });
+
+        // Clear API key from localStorage
+        clearApiKeyBtn.addEventListener('click', () => {
+            localStorage.removeItem('openrouter_api_key');
+            apiKeyInput.value = '';
+            apiKeyStatus.textContent = 'API Key đã được xóa';
+            apiKeyStatus.className = 'api-key-status';
+        });
+
+        // Toggle password visibility
+        togglePasswordBtn.addEventListener('click', () => {
+            // Don't toggle if it's the masked value
+            if (apiKeyInput.value === '•'.repeat(20)) {
+                apiKeyInput.value = localStorage.getItem('openrouter_api_key') || '';
+                apiKeyInput.type = 'text';
+                togglePasswordBtn.textContent = '🔒';
+            } else if (apiKeyInput.type === 'password') {
+                apiKeyInput.type = 'text';
+                togglePasswordBtn.textContent = '🔒';
+            } else {
+                apiKeyInput.type = 'password';
+                togglePasswordBtn.textContent = '👁️';
+            }
+        });
+
         // List of models that support image input
 const visionModels = [
     'qwen/qwen2.5-vl-72b-instruct',
@@ -277,6 +434,14 @@ document.getElementById('generate-btn').addEventListener('click', async () => {
     const responseDiv = document.getElementById('response');
     const fileInput = document.getElementById('file-input');
     
+    // Check if API key exists
+    const apiKey = localStorage.getItem('openrouter_api_key');
+    if (!apiKey) {
+        alert('Vui lòng nhập và lưu OpenRouter API key trước khi sử dụng');
+        apiKeyInput.focus();
+        return;
+    }
+    
     if (!promptText && fileInput.files.length === 0) {
         alert('Please enter a prompt or attach files');
         return;
@@ -292,6 +457,7 @@ document.getElementById('generate-btn').addEventListener('click', async () => {
         const formData = new FormData();
         formData.append('prompt', promptText);
         formData.append('model', model);
+        formData.append('api_key', apiKey);
         
         // Add files to FormData
         for (let i = 0; i < fileInput.files.length; i++) {
