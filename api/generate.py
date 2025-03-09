@@ -27,6 +27,7 @@ class handler(BaseHTTPRequestHandler):
             # Extract form fields
             prompt = form.getvalue('prompt', '')
             model = form.getvalue('model', 'deepseek/deepseek-r1:free')
+            api_key = form.getvalue('api_key', '')  # Get API key from form data
             
             # Process files
             files = []
@@ -63,16 +64,15 @@ class handler(BaseHTTPRequestHandler):
             
             prompt = data.get('prompt', '')
             model = data.get('model', 'deepseek/deepseek-r1:free')
+            api_key = data.get('api_key', '')  # Get API key from JSON data
             files = data.get('files', [])
         
-        # Get API key from environment variable
-        api_key = os.environ.get('OPENROUTER_API_KEY')
-        
+        # Check if API key is provided
         if not api_key:
             self.send_response(400)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            response = {"error": "OpenRouter API key not found. Please set the OPENROUTER_API_KEY environment variable."}
+            response = {"error": "OpenRouter API key is required. Please provide your API key."}
             self.wfile.write(json.dumps(response).encode('utf-8'))
             return
         
